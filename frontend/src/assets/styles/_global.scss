@@ -1,0 +1,46 @@
+@import "variables";
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: $container-width;
+  margin: 0 auto;
+}
+
+a {
+  text-decoration: none;
+}
+
+.button {
+  border-radius: 5px;
+  background: $text-blue-color;
+  cursor: pointer;
+  color: rgb(255, 255, 255);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  box-sizing: border-box;
+  outline: none;
+
+  &:disabled {
+    background: gray;
+    cursor: not-allowed;
+  }
+}
+
+.input {
+  padding: 20px;
+  box-sizing: border-box;
+  border: 2px solid $text-blue-color;
+  border-radius: 3px;
+  background: rgb(255, 255, 255);
+
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: $text-dark-blue-color;
+}
