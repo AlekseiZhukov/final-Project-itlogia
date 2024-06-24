@@ -4,11 +4,9 @@ import {AuthService} from "../../../core/auth/auth.service";
 import {DefaultResponseType} from "../../../../types/default-response.type";
 import {LoginResponseType} from "../../../../types/login-response.type";
 import {HttpErrorResponse} from "@angular/common/http";
-import {
-  MatSnackBar, MatSnackBarHorizontalPosition,
-  MatSnackBarVerticalPosition,
-} from "@angular/material/snack-bar";
 import {Router} from "@angular/router";
+import {SnackBarService} from "../../../shared/services/snack-bar.service";
+import {UserInfoType} from "../../../../types/user-info.type";
 
 @Component({
   selector: 'app-login',
@@ -22,10 +20,9 @@ export class LoginComponent implements OnInit {
     password: ['', [Validators.required]],
     rememberMe: [false],
   });
-  horizontalPosition: MatSnackBarHorizontalPosition = 'center';
-  verticalPosition: MatSnackBarVerticalPosition = 'top';
+  showPassword: boolean = false;
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private _snackBar: MatSnackBar, private router: Router) {
+  constructor(private fb: FormBuilder, private authService: AuthService, private snackBar: SnackBarService, private router: Router) {
   }
 
   ngOnInit(): void {
@@ -45,36 +42,27 @@ export class LoginComponent implements OnInit {
               error = 'Ошибка авторизации';
             }
             if (error) {
-              this._snackBar.open(error, '', {
-                horizontalPosition: this.horizontalPosition,
-                verticalPosition: this.verticalPosition
-              })
-              throw new Error(error)
+              this.snackBar.openSnackBar(error);
+              throw new Error(error);
             }
 
-            //set tokens
-
-            this._snackBar.open('Вы успешно авторизовались', '', {
-              horizontalPosition: this.horizontalPosition,
-              verticalPosition: this.verticalPosition
-            })
+            this.authService.setTokens(loginResponse.accessToken, loginResponse.refreshToken);
+            this.snackBar.openSnackBar('Вы успешно авторизовались')
             this.router.navigate(['/']);
           },
           error: (errorResponse: HttpErrorResponse) => {
             if (errorResponse.error && errorResponse.error.message) {
-              this._snackBar.open(errorResponse.error.message, '', {
-                horizontalPosition: this.horizontalPosition,
-                verticalPosition: this.verticalPosition
-              })
+              this.snackBar.openSnackBar(errorResponse.error.message);
             } else {
-              this._snackBar.open('Ошибка авторизации', '', {
-                horizontalPosition: this.horizontalPosition,
-                verticalPosition: this.verticalPosition
-              })
+              this.snackBar.openSnackBar('Ошибка авторизации');
             }
           }
         })
     }
+  }
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
   }
 
 }

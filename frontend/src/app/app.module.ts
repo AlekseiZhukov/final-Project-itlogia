@@ -9,6 +9,9 @@ import { FooterComponent } from './shared/layout/footer/footer.component';
 import { MainComponent } from './views/main/main.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatSnackBarModule} from "@angular/material/snack-bar";
+import {HttpClientModule} from "@angular/common/http";
+import {MatMenuModule} from "@angular/material/menu";
+import {SharedModule} from "./shared/shared.module";
 
 @NgModule({
   declarations: [
@@ -20,9 +23,12 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
+    HttpClientModule,
     MatSnackBarModule,
-    BrowserAnimationsModule
+    MatMenuModule,
+    BrowserAnimationsModule,
+    SharedModule,
+    AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -14,9 +14,24 @@
 
     .auth-input {
       margin-bottom: 5px;
-
+      position: relative;
       input {
         width: 422px;
+
+      }
+
+      .button-input-eye {
+        position: absolute;
+        top: 19px;
+        right: 14px;
+        background: transparent;
+        color: $text-dark-blue-color;
+        span {
+          svg {
+            width: 24px;
+            height: 24px;
+          }
+        }
       }
     }
 
