@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
+import {DialogComponent} from "../../components/dialog/dialog.component";
+import {NumberWindow, TypeDialog} from "../../../../types/dialog-data.type";
+
 
 @Component({
   selector: 'app-footer',
@@ -7,9 +11,26 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FooterComponent implements OnInit {
 
-  constructor() { }
+  constructor(public dialog: MatDialog) { }
+
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(DialogComponent, {
+      data: {numberWindow: NumberWindow.first, typeDialog: TypeDialog.consultation}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed', result);
+      if (result) {
+        this.dialog.open(DialogComponent, {
+          data: {numberWindow: NumberWindow.second}
+        });
+      }
+    });
+  }
 
   ngOnInit(): void {
+
   }
 
 }

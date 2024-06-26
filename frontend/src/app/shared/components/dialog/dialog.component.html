@@ -1,0 +1,37 @@
+<div *ngIf="data.numberWindow === numberWindow.first"
+     class="dialog-title">{{data.typeDialog === typeDialog.consultation ? 'Закажите бесплатную консультацию!' : 'Заявка на услугу'}}</div>
+<div *ngIf="data.numberWindow === numberWindow.second" class="dialog-title dialog-title-second">Спасибо за вашу
+  заявку!
+</div>
+<form *ngIf="data.numberWindow === numberWindow.first" class="dialog-inputs" #reForm="ngForm">
+  <select class="dialog-input select" *ngIf="data.typeDialog === typeDialog.service" required [(ngModel)]="requestForm.category">
+    <option *ngFor="let category of categories; let i = index"  [value]="category.url" [selected]="i === 0">{{category.name}}</option>
+  </select>
+  <div class="dialog-input">
+    <input type="text" class="input" name="name" #name="ngModel" placeholder="Ваше имя" required [(ngModel)]="requestForm.name"
+           [ngStyle]="{'border-color': name.invalid && (name.dirty || name.touched) ? 'red': ''}" >
+
+  </div>
+  <div class="dialog-input">
+    <input type="tel"  class="input" name="phone" placeholder="Ваш номер телефона" #phone="ngModel"
+           [ngStyle]="{'border-color': phone.invalid && (phone.dirty || phone.touched) ? 'red': ''}"
+           required [(ngModel)]="requestForm.phone">
+  </div>
+  <div class="dialog-actions">
+    <button *ngIf="data.typeDialog === typeDialog.consultation && data.numberWindow === numberWindow.first "
+            class="button" (click)="onClickConsultation(reForm)" type="submit" [disabled]="!reForm.valid">Заказать консультацию
+    </button>
+    <button *ngIf="data.typeDialog === typeDialog.service && data.numberWindow === numberWindow.first" class="button"
+            (click)="onClickService(reForm)" type="submit" [disabled]="!reForm.valid">Оставить заявку
+    </button>
+  </div>
+</form>
+<div *ngIf="data.numberWindow === numberWindow.second" class="dialog-text">
+  Мы свяжемся с вами при первой же возможности.
+</div>
+<div class="dialog-actions">
+  <button
+    *ngIf="data.numberWindow === numberWindow.second"
+    class="button dialog-button-second" (click)="onNoClick()">Окей
+  </button>
+</div>
