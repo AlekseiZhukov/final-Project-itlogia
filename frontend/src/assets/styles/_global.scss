@@ -5,6 +5,11 @@ html, body {
   padding: 0;
 }
 
+ html {
+   scroll-behavior: smooth;
+ }
+
+
 .container {
   max-width: $container-width;
   margin: 0 auto;
@@ -13,6 +18,44 @@ html, body {
 a {
   text-decoration: none;
 }
+
+h2 {
+  color: $text-blue-color;
+  font-family: 'Lora', serif;
+  font-size: 38px;
+  font-weight: 400;
+  line-height: 130%;
+  margin: 0;
+  padding: 0;
+}
+h3 {
+  color: $text-blue-color;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 130%;
+  margin: 30px 0 10px;
+  padding: 0;
+}
+p, ul {
+  color: $text-dark-blue-color;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 130%;
+  margin: 10px 0;
+  padding: 0;
+}
+
+ul {
+  padding: 10px;
+  margin-left: 10px;
+  li::marker {
+    font-size: 9px;
+  }
+}
+
+
 
 .button {
   border-radius: 5px;
@@ -57,6 +100,12 @@ a {
     font-size: 14px;
     font-weight: 400;
   }
+}
+
+.custom-checkbox {
+  position: absolute;
+  z-index: -1;
+  opacity: 0;
 }
 
 .select {
@@ -154,4 +203,29 @@ mat-dialog-container.mat-dialog-container {
     }
   }
 }
+
+span.selection {
+  color: $text-blue-color;
+}
+
+.article-carousel {
+  .owl-dots {
+    z-index: 100;
+    position: absolute;
+    bottom: 15px;
+    left: calc(50% - 45px);
+  }
+  .owl-dots .owl-dot span {
+    background: transparent !important;
+    box-sizing: border-box;
+    border: 1px solid rgb(255, 255, 255);
+    margin: 5px 10px;
+  }
+
+  .owl-dots .owl-dot.active span,
+  .owl-dots .owl-dot:hover span {
+    background: rgb(255, 255, 255) !important;
+  }
+}
+
 

@@ -1,6 +1,7 @@
 export type DialogDataType = {
   numberWindow: NumberWindow,
-  typeDialog: TypeDialog
+  typeDialog: TypeDialog,
+  category?: string
 }
 
 export enum NumberWindow {

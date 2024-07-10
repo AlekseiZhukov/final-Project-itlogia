@@ -2,9 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {AuthService} from "../../../core/auth/auth.service";
 import {UserInfoType} from "../../../../types/user-info.type";
 import {DefaultResponseType} from "../../../../types/default-response.type";
-import {HttpErrorResponse} from "@angular/common/http";
 import {SnackBarService} from "../../services/snack-bar.service";
-import {Router} from "@angular/router";
+import { Router} from "@angular/router";
+
 
 @Component({
   selector: 'app-header',
@@ -15,6 +15,7 @@ export class HeaderComponent implements OnInit {
 
   isLogged: boolean = false;
   userName: string | undefined = '';
+
 
   constructor(private authService: AuthService, private snackBar: SnackBarService, private router: Router) {
     this.isLogged = this.authService.getIsLoggedIn();

@@ -4,9 +4,9 @@ import {AuthService} from "../../../core/auth/auth.service";
 import {DefaultResponseType} from "../../../../types/default-response.type";
 import {LoginResponseType} from "../../../../types/login-response.type";
 import {HttpErrorResponse} from "@angular/common/http";
+import {Location } from "@angular/common";
 import {Router} from "@angular/router";
 import {SnackBarService} from "../../../shared/services/snack-bar.service";
-import {UserInfoType} from "../../../../types/user-info.type";
 
 @Component({
   selector: 'app-login',
@@ -22,7 +22,7 @@ export class LoginComponent implements OnInit {
   });
   showPassword: boolean = false;
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private snackBar: SnackBarService, private router: Router) {
+  constructor(private fb: FormBuilder, private authService: AuthService, private snackBar: SnackBarService, private router: Router, private location: Location) {
   }
 
   ngOnInit(): void {
@@ -48,7 +48,8 @@ export class LoginComponent implements OnInit {
 
             this.authService.setTokens(loginResponse.accessToken, loginResponse.refreshToken);
             this.snackBar.openSnackBar('Вы успешно авторизовались')
-            this.router.navigate(['/']);
+            //this.router.navigate(['/']);
+            this.location.back();
           },
           error: (errorResponse: HttpErrorResponse) => {
             if (errorResponse.error && errorResponse.error.message) {

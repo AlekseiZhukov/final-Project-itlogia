@@ -13,7 +13,7 @@ export class RequestService {
   constructor(private http: HttpClient) {
   }
 
-  rquest(name: string, phone: string, type: TypeRequest, service?: string): Observable<DefaultResponseType> {
+  request(name: string, phone: string, type: TypeRequest, service?: string): Observable<DefaultResponseType> {
     const body: DialogRequestType = {
       name, phone, type
     }

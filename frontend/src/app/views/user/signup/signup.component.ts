@@ -6,6 +6,7 @@ import {Router} from "@angular/router";
 import {DefaultResponseType} from "../../../../types/default-response.type";
 import {LoginResponseType} from "../../../../types/login-response.type";
 import {HttpErrorResponse} from "@angular/common/http";
+import {Location} from "@angular/common";
 
 @Component({
   selector: 'app-signup',
@@ -14,14 +15,14 @@ import {HttpErrorResponse} from "@angular/common/http";
 })
 export class SignupComponent implements OnInit {
   signupForm = this.fb.group({
-    name: ['', [Validators.required, Validators.pattern(/^[А-ЯЁ][а-яё]+(\s+[А-ЯЁ][а-яё]+){1,}/)]],
+    name: ['', [Validators.required, Validators.pattern(/^[А-ЯЁ][а-яё]+(\s[A-ЯЁ][а-яё]+){0,3}/)]],
     email: ['', [Validators.email, Validators.required]],
     password: ['', [Validators.required, Validators.pattern(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/)]],
     agree: [false, [Validators.requiredTrue]],
   });
   showPassword: boolean = false;
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private snackBar: SnackBarService, private router: Router) {
+  constructor(private fb: FormBuilder, private authService: AuthService, private snackBar: SnackBarService, private router: Router, private location: Location) {
   }
 
   ngOnInit(): void {
@@ -48,7 +49,7 @@ export class SignupComponent implements OnInit {
 
               this.authService.setTokens(loginResponse.accessToken, loginResponse.refreshToken);
               this.snackBar.openSnackBar('Вы успешно зарегистрировались')
-              this.router.navigate(['/']);
+              this.location.back();
             },
             error: (errorResponse: HttpErrorResponse) => {
               if (errorResponse.error && errorResponse.error.message) {
