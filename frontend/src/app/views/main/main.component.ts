@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ArticleType} from "../../../types/article.type";
 import {ArticleService} from "../../shared/services/article.service";
 import {OwlOptions} from "ngx-owl-carousel-o";
@@ -6,13 +6,14 @@ import {MatDialog} from "@angular/material/dialog";
 import {DialogComponent} from "../../shared/components/dialog/dialog.component";
 import {NumberWindow, TypeDialog} from "../../../types/dialog-data.type";
 import {services, shares, reviews} from "../../shared/data/data-for-main-page";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.scss']
 })
-export class MainComponent implements OnInit {
+export class MainComponent implements OnInit, OnDestroy {
 
   shares: typeof shares;
   services: typeof services;
@@ -66,7 +67,8 @@ export class MainComponent implements OnInit {
       }
     },
     nav: false
-  }
+  };
+  private subscription: Subscription = new Subscription();
 
   constructor(private articleService: ArticleService, public dialog: MatDialog) {
     this.shares = shares;
@@ -75,24 +77,28 @@ export class MainComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.articleService.getBestArticles()
-      .subscribe( (data:ArticleType[]) => {
+    this.subscription.add(this.articleService.getBestArticles()
+      .subscribe((data: ArticleType[]) => {
         this.bestArticles = data;
-      } )
+      }))
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe()
   }
 
   openDialog(category?: string): void {
     const dialogRef = this.dialog.open(DialogComponent, {
       data: {numberWindow: NumberWindow.first, typeDialog: TypeDialog.service, category}
     });
-    dialogRef.afterClosed().subscribe(result => {
+    this.subscription.add(dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed', result);
       if (result) {
         this.dialog.open(DialogComponent, {
           data: {numberWindow: NumberWindow.second}
         });
       }
-    });
+    }));
   }
 
 }

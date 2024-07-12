@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ArticleService} from "../../../shared/services/article.service";
 import {ArticleType} from "../../../../types/article.type";
 import {CategoryService} from "../../../shared/services/category.service";
@@ -7,19 +7,20 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {ActiveParamsUtil} from "../../../shared/utils/active-params.util";
 import {ActiveParamsType} from "../../../../types/active-params.type";
 import {AppliedFilterType} from "../../../../types/applied-filter.type";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-blog',
   templateUrl: './blog.component.html',
   styleUrls: ['./blog.component.scss']
 })
-export class BlogComponent implements OnInit {
+export class BlogComponent implements OnInit, OnDestroy {
   articles: ArticleType[] = [];
   categories: CategoriesType[] = [];
   activeParams: ActiveParamsType = {categories: []};
   appliedFilters: AppliedFilterType[] = [];
   pages: number[] = [];
-
+  private subscription: Subscription = new Subscription();
   constructor(private articleService: ArticleService,
               private categoryService: CategoryService,
               private activatedRoute: ActivatedRoute,
@@ -27,10 +28,10 @@ export class BlogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.categoryService.getCategories()
+    this.subscription.add( this.categoryService.getCategories()
       .subscribe(data => {
         this.categories = data;
-        this.activatedRoute.queryParams
+        this.subscription.add(this.activatedRoute.queryParams
           .subscribe(params => {
             this.activeParams = ActiveParamsUtil.processParams(params);
             this.appliedFilters = [];
@@ -43,16 +44,20 @@ export class BlogComponent implements OnInit {
                 })
               }
             });
-            this.articleService.getArticles(this.activeParams)
+            this.subscription.add(this.articleService.getArticles(this.activeParams)
               .subscribe(data => {
                 this.pages = [];
                 for (let i = 1; i <= data.pages; i++) {
                   this.pages.push(i);
                 }
                 this.articles = data.items;
-              })
-          })
-      });
+              }))
+          }))
+      }));
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe()
   }
 
   removeAppliedFilter(appliedFilter: AppliedFilterType) {

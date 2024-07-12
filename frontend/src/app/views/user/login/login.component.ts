@@ -1,19 +1,20 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {FormBuilder, Validators} from "@angular/forms";
 import {AuthService} from "../../../core/auth/auth.service";
 import {DefaultResponseType} from "../../../../types/default-response.type";
 import {LoginResponseType} from "../../../../types/login-response.type";
 import {HttpErrorResponse} from "@angular/common/http";
-import {Location } from "@angular/common";
+import {Location} from "@angular/common";
 import {Router} from "@angular/router";
 import {SnackBarService} from "../../../shared/services/snack-bar.service";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnDestroy {
 
   loginForm = this.fb.group({
     email: ['', [Validators.email, Validators.required]],
@@ -21,16 +22,26 @@ export class LoginComponent implements OnInit {
     rememberMe: [false],
   });
   showPassword: boolean = false;
+  private subscription: Subscription | null = null;
 
   constructor(private fb: FormBuilder, private authService: AuthService, private snackBar: SnackBarService, private router: Router, private location: Location) {
   }
 
-  ngOnInit(): void {
+  get email() {
+    return this.loginForm.get('email')
+  }
+
+  get password() {
+    return this.loginForm.get('password')
+  }
+
+  ngOnDestroy() {
+    this.subscription?.unsubscribe()
   }
 
   login(): void {
     if (this.loginForm.valid && this.loginForm.value.email && this.loginForm.value.password) {
-      this.authService.login(this.loginForm.value.email, this.loginForm.value.password, !!this.loginForm.value.rememberMe)
+      this.subscription = this.authService.login(this.loginForm.value.email, this.loginForm.value.password, !!this.loginForm.value.rememberMe)
         .subscribe({
           next: (data: DefaultResponseType | LoginResponseType) => {
             let error = null;
@@ -48,7 +59,6 @@ export class LoginComponent implements OnInit {
 
             this.authService.setTokens(loginResponse.accessToken, loginResponse.refreshToken);
             this.snackBar.openSnackBar('Вы успешно авторизовались')
-            //this.router.navigate(['/']);
             this.location.back();
           },
           error: (errorResponse: HttpErrorResponse) => {

@@ -13,12 +13,24 @@
     <input type="text" class="input" name="name" #name="ngModel" placeholder="Ваше имя" required
            [(ngModel)]="requestForm.name"
            [ngStyle]="{'border-color': name.invalid && (name.dirty || name.touched) ? 'red': ''}">
-
+    <div *ngIf="name.invalid && (name.dirty || name.touched)">
+      <div class="text-error" *ngIf="name.errors?.['required']">
+        Как к Вам обращаться?
+      </div>
+    </div>
   </div>
   <div class="dialog-input">
-    <input type="tel" class="input" name="phone" placeholder="Ваш номер телефона" #phone="ngModel"
+    <input type="tel" prefix="+7" mask="(000) 000 00 00"  class="input" name="phone" placeholder="Ваш номер телефона" #phone="ngModel"
            [ngStyle]="{'border-color': phone.invalid && (phone.dirty || phone.touched) ? 'red': ''}"
-           required [(ngModel)]="requestForm.phone" phoneMask autocomplete="off">
+           required [(ngModel)]="requestForm.phone" autocomplete="off">
+    <div *ngIf="phone.invalid && (phone.dirty || phone.touched)">
+      <div class="text-error" *ngIf="phone.errors?.['required']">
+        Напишите номер телефона
+      </div>
+      <div class="text-error" >
+        Номер должен быть в формате ххх ххх хх хх
+      </div>
+    </div>
   </div>
   <div class="dialog-actions">
     <button *ngIf="data.typeDialog === typeDialog.consultation && data.numberWindow === numberWindow.first "

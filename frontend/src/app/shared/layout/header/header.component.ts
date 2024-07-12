@@ -1,9 +1,10 @@
-import {Component, OnInit} from '@angular/core';
-import {AuthService} from "../../../core/auth/auth.service";
-import {UserInfoType} from "../../../../types/user-info.type";
-import {DefaultResponseType} from "../../../../types/default-response.type";
-import {SnackBarService} from "../../services/snack-bar.service";
-import { Router} from "@angular/router";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AuthService } from "../../../core/auth/auth.service";
+import { UserInfoType } from "../../../../types/user-info.type";
+import { DefaultResponseType } from "../../../../types/default-response.type";
+import { SnackBarService } from "../../services/snack-bar.service";
+import { Router } from "@angular/router";
+import { Subscription } from "rxjs";
 
 
 @Component({
@@ -11,11 +12,11 @@ import { Router} from "@angular/router";
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
 
   isLogged: boolean = false;
   userName: string | undefined = '';
-
+  private subscription: Subscription | null = null;
 
   constructor(private authService: AuthService, private snackBar: SnackBarService, private router: Router) {
     this.isLogged = this.authService.getIsLoggedIn();
@@ -26,7 +27,7 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.authService.isLogged$.subscribe((isLoggedIn: boolean) => {
+    this.subscription = this.authService.isLogged$.subscribe((isLoggedIn: boolean) => {
       this.isLogged = isLoggedIn;
       const accessToken = this.authService.getTokens().accessToken;
       if (isLoggedIn && accessToken) {
@@ -62,6 +63,10 @@ export class HeaderComponent implements OnInit {
     this.authService.removeUserInfo();
     this.snackBar.openSnackBar('Вы вышли из системы');
     this.router.navigate(['/']);
+  }
+
+  ngOnDestroy() {
+    this.subscription?.unsubscribe();
   }
 
 }

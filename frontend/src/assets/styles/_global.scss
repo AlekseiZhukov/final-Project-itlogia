@@ -178,6 +178,16 @@ mat-dialog-container.mat-dialog-container {
       width: 422px;
       height: 53px;
     }
+
+    .text-error {
+      color: red;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 400;
+      text-align: center;
+      max-width: 400px;
+      margin-top: 3px;
+    }
   }
   .dialog-text {
     color: $text-dark-blue-color;

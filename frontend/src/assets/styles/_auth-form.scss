@@ -20,13 +20,19 @@
         height: 53px;
       }
 
+
+
       .button-input-eye {
         position: absolute;
-        top: 19px;
+        top: 14px;
         right: 14px;
         background: transparent;
         color: $text-dark-blue-color;
+
         span {
+          display: flex;
+          align-items: center;
+          justify-content: center;
           svg {
             width: 24px;
             height: 24px;
@@ -80,5 +86,16 @@
       color: $text-blue-color;
       margin-left: 7px;
     }
+  }
+}
+.auth-input-error {
+  max-width: 422px;
+  .text-error {
+    margin-top: 3px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    margin-left: 10px;
+    color: red;
   }
 }

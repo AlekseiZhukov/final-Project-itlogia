@@ -1,15 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {DialogComponent} from "../../components/dialog/dialog.component";
 import {NumberWindow, TypeDialog} from "../../../../types/dialog-data.type";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-footer',
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.scss']
 })
-export class FooterComponent implements OnInit {
-
+export class FooterComponent implements OnDestroy {
+  private subscription: Subscription | null = null;
   constructor(public dialog: MatDialog) {
 
   }
@@ -18,7 +19,7 @@ export class FooterComponent implements OnInit {
     const dialogRef = this.dialog.open(DialogComponent, {
       data: {numberWindow: NumberWindow.first, typeDialog: TypeDialog.consultation}
     });
-    dialogRef.afterClosed().subscribe(result => {
+    this.subscription = dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed', result);
       if (result) {
         this.dialog.open(DialogComponent, {
@@ -28,8 +29,8 @@ export class FooterComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-
+  ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
   }
 
 }

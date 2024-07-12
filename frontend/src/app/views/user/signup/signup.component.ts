@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {FormBuilder, Validators} from "@angular/forms";
 import {AuthService} from "../../../core/auth/auth.service";
 import {SnackBarService} from "../../../shared/services/snack-bar.service";
@@ -7,13 +7,14 @@ import {DefaultResponseType} from "../../../../types/default-response.type";
 import {LoginResponseType} from "../../../../types/login-response.type";
 import {HttpErrorResponse} from "@angular/common/http";
 import {Location} from "@angular/common";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.scss']
 })
-export class SignupComponent implements OnInit {
+export class SignupComponent implements OnDestroy {
   signupForm = this.fb.group({
     name: ['', [Validators.required, Validators.pattern(/^[А-ЯЁ][а-яё]+(\s[A-ЯЁ][а-яё]+){0,3}/)]],
     email: ['', [Validators.email, Validators.required]],
@@ -21,17 +22,28 @@ export class SignupComponent implements OnInit {
     agree: [false, [Validators.requiredTrue]],
   });
   showPassword: boolean = false;
-
+  private subscription: Subscription | null = null;
   constructor(private fb: FormBuilder, private authService: AuthService, private snackBar: SnackBarService, private router: Router, private location: Location) {
   }
 
-  ngOnInit(): void {
+  get email() {
+    return this.signupForm.get('email')
+  }
+  get password() {
+    return this.signupForm.get('password')
+  }
+  get name() {
+    return this.signupForm.get('name')
+  }
+
+  ngOnDestroy() {
+    this.subscription?.unsubscribe()
   }
 
   signup() {
     if (this.signupForm.valid && this.signupForm.value.name && this.signupForm.value.email
       && this.signupForm.value.password && this.signupForm.value.agree) {
-        this.authService.signup(this.signupForm.value.name, this.signupForm.value.email, this.signupForm.value.password)
+        this.subscription = (this.authService.signup(this.signupForm.value.name, this.signupForm.value.email, this.signupForm.value.password)
           .subscribe({
             next: (data: DefaultResponseType | LoginResponseType) => {
               let error = null;
@@ -58,7 +70,7 @@ export class SignupComponent implements OnInit {
                 this.snackBar.openSnackBar('Ошибка регистрации');
               }
             }
-          })
+          }));
     }
   }
 

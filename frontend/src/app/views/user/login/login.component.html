@@ -9,6 +9,14 @@
                  && (loginForm.get('email')?.dirty || loginForm.get('email')?.touched)
                  ? 'red': ''}"
                  placeholder="Электронная почта" formControlName="email">
+          <div class="auth-input-error" *ngIf="email?.invalid && (email?.dirty || email?.touched)">
+            <div class="text-error" *ngIf="email?.errors?.['required']">
+              Обязательно укажите Ваш email
+            </div>
+            <div class="text-error" *ngIf="email?.errors?.['email']">
+              Некорректный email адрес
+            </div>
+          </div>
         </div>
         <div class="auth-input">
           <input type="{{showPassword ? 'text' : 'password'}}" class="input"
@@ -16,6 +24,11 @@
                  && (loginForm.get('password')?.dirty || loginForm.get('password')?.touched)
                  ? 'red': ''}"
                  placeholder="Пароль" formControlName="password">
+          <div class="auth-input-error" *ngIf="password?.invalid && (password?.dirty || password?.touched)">
+            <div class="text-error" *ngIf="password?.errors?.['required']">
+              Введите пароль
+            </div>
+          </div>
           <button class="button button-input-eye" (click)="togglePasswordVisibility()">
             <span *ngIf="showPassword">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye"
